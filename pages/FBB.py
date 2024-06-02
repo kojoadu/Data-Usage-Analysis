@@ -8,6 +8,8 @@ from modules.util import get_max_date, get_min_date
 
 st.title("FTTX Data Usage Analysis")
 
+st.set_option('server.maxUploadSize', 3072)  # Set maximum upload size to 1 GB
+
 # Function to get ISP from ip-api.com asynchronously
 async def get_isp(session, ip):
     try:
