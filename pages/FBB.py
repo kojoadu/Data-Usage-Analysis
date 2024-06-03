@@ -13,7 +13,7 @@ st.title("FTTX Data Usage Analysis")
 # Function to get ISP from ip-api.com asynchronously
 async def get_isp(session, ip):
     try:
-        async with session.get(f"http://ip-api.com/json/{ip}") as response:
+        async with session.get(f"https://api.findip.net/{ip}/?token=5d0d092fb47046dbb8f3f7be6617c058") as response:
             data = await response.json()
             if data['status'] == 'success':
                 return data['isp']
