@@ -8,19 +8,20 @@ from modules.util import get_max_date, get_min_date
 
 st.title("FTTX Data Usage Analysis")
 
-#st.set_option('server.maxUploadSize', 3000)  # Set maximum upload size to 1 GB
-
 # Function to get ISP from ip-api.com asynchronously
 async def get_isp(session, ip):
     try:
         async with session.get(f"https://api.findip.net/{ip}/?token=5d0d092fb47046dbb8f3f7be6617c058") as response:
-            data = await response.json()
-            if data['status'] == 'success':
-                return data['isp']
+            if response.status == 200:
+                data = await response.json()
+                if data.get('status') == 'success':
+                    return data.get('isp', 'Unknown')
+                else:
+                    return 'Unknown'
             else:
                 return 'Unknown'
     except Exception as e:
-        return 'Error'
+        return f'Error: {e}'
 
 # Function to update Application_Type column asynchronously
 async def update_application_type(df):
@@ -31,7 +32,6 @@ async def update_application_type(df):
             tasks.append(asyncio.ensure_future(get_isp(session, ip)))
 
         isps = await asyncio.gather(*tasks)
-
         df.loc[df['Application_Type'] == 'Other_UDP', 'Application_Type'] = isps
     return df
 
