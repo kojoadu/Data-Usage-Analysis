@@ -37,10 +37,6 @@ async def update_application_type(df):
         
         # Update the DataFrame with the obtained ISP values
         df.loc[df['Application_Type'] == 'Other_UDP', 'Application_Type'] = isps
-        
-        # Print the updated DataFrame for debugging
-        print("Updated DataFrame:")
-        print(df)
     return df
 
 @st.cache_data
@@ -145,7 +141,7 @@ if 'fbb_df' in st.session_state:
                         category_traffic = category_traffic.sort_values(by='Total_Traffic_GB', ascending=False)
 
                         fig = px.bar(category_traffic, x='Total_Traffic_GB', y='Category_Type', orientation='h', 
-                                     title='Usage per Category', labels={'Total_Traffic_GB': 'Total Traffic (GB)'}, 
+                                     title='Usage per Category', labels={'Total_Traffic_GB': 'Total Traffic (GB)'}, template="seaborn",
                                      color='Category_Type', color_discrete_sequence=px.colors.qualitative.Set3)
                         fig.update_layout(yaxis_title='Category Type')
                         st.plotly_chart(fig)
