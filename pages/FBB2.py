@@ -75,6 +75,7 @@ def process_data(df):
             return pd.DataFrame()  # Return an empty dataframe on error
 
     return df
+
 with st.form('read_data'):
     fl = st.file_uploader(":file_folder: Upload your file", type=["csv", "txt", "xlsx", "xls"])
     submit_button = st.form_submit_button('Submit')
@@ -99,7 +100,6 @@ with st.form('read_data'):
 
 if 'fbb_df' in st.session_state:
     fbb_df = st.session_state['fbb_df']
-    
     
     # Second form: Analyze data
     with st.form('analyze_data'):
