@@ -10,3 +10,5 @@ def get_min_date(fbb_df):
 
 def get_max_date(fbb_df):
     return fbb_df['Start_Time'].max()
+
+# CSS for modernizing the page

@@ -1,0 +1,63 @@
+/* custom.css */
+@font-face {
+    font-family: 'MTN Brighter Sans';
+    src: url('fonts/MTN Brighter Sans Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+body, .stMarkdown, .stSpinner, .stText, .stTitle, .stSuccess, .stError, .stWarning, .stFileUploader, .stForm, .stSelectbox, .stDateInput, .stButton button {
+    font-family: 'MTN Brighter Sans' ;
+    color: #3E3E3E;
+}
+body {
+    background: linear-gradient(135deg, #f3e5f5, #e8eaf6);
+    font-family: 'MTN Brighter Sans' !important, sans-serif;
+}
+.main .block-container {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+h1, .title-custom {
+    color: #3E3E3E;
+    text-align: center;
+    font-weight: 300;
+    font-family: 'MTN Brighter Sans', sans-serif;
+}
+
+h2, .stForm {
+    color: #3E3E3E;
+    text-align: center;
+    font-weight: 300;
+    font-family: 'MTN Brighter Sans', sans-serif;
+}
+.stButton button {
+    color: white;
+    background: linear-gradient(135deg, #ff6347, #ff4500);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-family: 'MTN Brighter Sans' ;
+}
+.stButton button:hover {
+    background: linear-gradient(135deg, #ff4500, #ff6347);
+}
+.stSelectbox select, .stDateInput input {
+    border-radius: 5px;
+}
+/* Glassy card style for forms */
+.stForm {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+.stForm:hover {
+    transform: scale(1.02);
+}

@@ -6,7 +6,16 @@ import aiohttp
 import asyncio
 from modules.util import get_max_date, get_min_date
 
-st.title("FTTX Data Usage Analysis")
+
+# Function to load local CSS file
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+# Load the custom CSS
+local_css("static/style.css")
+
+st.markdown('<h1 class="title-custom">FTTX Data Usage Analysis Tool</h1>', unsafe_allow_html=True)
 
 # Function to get ISP from ip-api.com asynchronously
 async def get_isp(session, ip):
@@ -37,10 +46,6 @@ async def update_application_type(df):
         
         # Update the DataFrame with the obtained ISP values
         df.loc[df['Application_Type'] == 'Other_UDP', 'Application_Type'] = isps
-        
-        # Print the updated DataFrame for debugging
-        print("Updated DataFrame:")
-        print(df)
     return df
 
 @st.cache_data
@@ -75,6 +80,11 @@ def process_data(df):
             return pd.DataFrame()  # Return an empty dataframe on error
 
     return df
+
+def filter_data_by_application_type(df, text):
+    filtered_df = df[df['Application_Type'].str.contains(text, case=False, na=False)]
+    return filtered_df[['Server_IP', 'Application_Type']]
+
 with st.form('read_data'):
     fl = st.file_uploader(":file_folder: Upload your file", type=["csv", "txt", "xlsx", "xls"])
     submit_button = st.form_submit_button('Submit')
@@ -99,8 +109,23 @@ with st.form('read_data'):
 
 if 'fbb_df' in st.session_state:
     fbb_df = st.session_state['fbb_df']
-    
-    
+
+    # Filter data by Application_Type
+    application_type_text = st.text_input('Enter text to search in Application Type')
+    if application_type_text:
+        filtered_df = filter_data_by_application_type(fbb_df, application_type_text)
+        st.write(filtered_df)
+
+        # Button to export the filtered data to CSV
+        if not filtered_df.empty:
+            csv = filtered_df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="Download filtered data as CSV",
+                data=csv,
+                file_name='filtered_data.csv',
+                mime='text/csv',
+            )
+
     # Second form: Analyze data
     with st.form('analyze_data'):
         categories_list = fbb_df['Category_Type'].unique()
@@ -145,7 +170,7 @@ if 'fbb_df' in st.session_state:
                         category_traffic = category_traffic.sort_values(by='Total_Traffic_GB', ascending=False)
 
                         fig = px.bar(category_traffic, x='Total_Traffic_GB', y='Category_Type', orientation='h', 
-                                     title='Usage per Category', labels={'Total_Traffic_GB': 'Total Traffic (GB)'}, 
+                                     title='Usage per Category', labels={'Total_Traffic_GB': 'Total Traffic (GB)'}, template="seaborn",
                                      color='Category_Type', color_discrete_sequence=px.colors.qualitative.Set3)
                         fig.update_layout(yaxis_title='Category Type')
                         st.plotly_chart(fig)
@@ -156,7 +181,7 @@ if 'fbb_df' in st.session_state:
                         application_traffic = application_traffic.sort_values(by='Total_Traffic_GB', ascending=False)
 
                         fig5 = px.bar(application_traffic, x='Application_Type', y='Total_Traffic_GB', title='Overall Application Traffic', 
-                                      color='Application_Type', labels={'Total_Traffic_GB': 'Total Traffic (GB)'}, 
+                                      color='Application_Type', labels={'Total_Traffic_GB': 'Total Traffic (GB)'}, template="seaborn",
                                       color_discrete_sequence=px.colors.qualitative.Set3)
                         st.plotly_chart(fig5)
 
@@ -166,7 +191,7 @@ if 'fbb_df' in st.session_state:
                             app_df = filtered_df[filtered_df['Application_Type'] == selected_application]
                             fig_time_series = px.line(app_df, x='Start_Time', y='Total_Traffic_GB', 
                                                       title=f'Time Series for {selected_application}',
-                                                      labels={'Total_Traffic_GB': 'Total Traffic (GB)', 'Start_Time': 'Time'})
+                                                      labels={'Total_Traffic_GB': 'Total Traffic (GB)', 'Start_Time': 'Time'}, template="seaborn")
                             st.plotly_chart(fig_time_series)
 
                 else:

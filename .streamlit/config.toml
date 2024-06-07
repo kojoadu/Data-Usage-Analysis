@@ -1,2 +1,14 @@
 [server]
 maxUploadSize = 3072
+headless = true
+enableCORS = false
+
+[theme]
+primaryColor = "#1c1c1c"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#f0f0f5"
+textColor = "#262730"
+font = "MTN Brighter Sans"
+
+[paths]
+static = "static"
